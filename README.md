@@ -63,3 +63,9 @@ install.bat
 ## Configuration
 
 Settings are stored in `%APPDATA%\KillSwitch\config.json`. Use the Settings UI to manage the list — no manual editing needed.
+---
+
+## More from VARØ Industries
+
+Free web apps, tools, and open-source projects → [varo.industries/apps](https://varo.industries/apps)
+
