@@ -4,3 +4,4 @@ build/
 dist/
 *.egg-info/
 .claude/
+logs/session_log.md
