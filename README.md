@@ -1,6 +1,6 @@
 # KillSwitch
 
-_Built by [VARØ Industries](https://varo.industries/apps)_
+_Built by [VARØ Industries](https://varo.industries/apps#github)_
 
 A Windows system tray tool that instantly kills messaging, video conferencing, screen-sharing, VPN, and social apps with a single double-click.
 
@@ -69,5 +69,5 @@ Settings are stored in `%APPDATA%\KillSwitch\config.json`. Use the Settings UI t
 
 ## More from VARØ Industries
 
-Free web apps, tools, and open-source projects → [varo.industries/apps](https://varo.industries/apps)
+Free web apps, tools, and open-source projects → [varo.industries/apps](https://varo.industries/apps#github)
 
