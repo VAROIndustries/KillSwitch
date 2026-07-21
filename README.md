@@ -1,5 +1,8 @@
 # KillSwitch
 
+**🌐 Tool page: [varo.industries/tools/killswitch](https://varo.industries/tools/killswitch)** — features, screenshots, install, and FAQ.
+
+
 _Built by [VARØ Industries](https://varo.industries/apps#github)_
 
 A Windows system tray tool that instantly kills messaging, video conferencing, screen-sharing, VPN, and social apps with a single double-click.
