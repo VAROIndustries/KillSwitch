@@ -31,6 +31,9 @@ CONFIG_DIR   = Path(os.getenv("APPDATA", str(Path.home()))) / APP_NAME
 CONFIG_FILE  = CONFIG_DIR / "config.json"
 AUTOSTART_REG = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 
+TOOL_URL   = "https://varo.industries/apps#github"
+GITHUB_URL = "https://github.com/VAROIndustries/KillSwitch"
+
 APP_GROUPS: list[str] = [
     "Messaging",
     "Video Conferencing",
@@ -579,6 +582,48 @@ def run_settings() -> None:
     root.mainloop()
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  About window (runs in a subprocess via --about flag)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def show_about() -> None:
+    """About dialog: version info and links to varo.industries."""
+    import webbrowser
+
+    root = tk.Tk()
+    root.title(f"About {APP_NAME}")
+    root.attributes("-topmost", True)
+    root.resizable(False, False)
+
+    pad = tk.Frame(root, padx=24, pady=18)
+    pad.pack()
+
+    tk.Label(pad, text=APP_NAME, font=("Segoe UI", 16, "bold")).pack()
+    tk.Label(pad, text=f"Version {APP_VERSION}", fg="#555").pack(pady=(2, 0))
+    tk.Label(pad, text="Instantly kill messaging & screen-sharing apps.",
+             fg="#333").pack(pady=(6, 12))
+
+    def _link(parent, text, url):
+        lbl = tk.Label(parent, text=text, fg="#1a6ec8", cursor="hand2",
+                       font=("Segoe UI", 9, "underline"))
+        lbl.pack()
+        lbl.bind("<Button-1>", lambda e: webbrowser.open(url))
+        return lbl
+
+    _link(pad, "varo.industries/apps", TOOL_URL)
+    _link(pad, "github.com/VAROIndustries/KillSwitch", GITHUB_URL)
+
+    tk.Label(pad, text="© 2026 VARØ Industries", fg="#888").pack(pady=(12, 10))
+    tk.Button(pad, text="Close", width=10, command=root.destroy).pack()
+
+    root.update_idletasks()
+    w, h = root.winfo_width(), root.winfo_height()
+    x = (root.winfo_screenwidth()  - w) // 2
+    y = (root.winfo_screenheight() - h) // 2
+    root.geometry(f"+{x}+{y}")
+
+    root.mainloop()
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  Tray app
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -597,6 +642,16 @@ def _spawn_settings() -> None:
         cmd = [sys.executable, "--settings"]
     else:
         cmd = [sys.executable, str(Path(sys.argv[0]).resolve()), "--settings"]
+    subprocess.Popen(cmd, creationflags=CREATE_NO_WINDOW)
+
+
+def _spawn_about() -> None:
+    """Launch the About window in a separate process."""
+    CREATE_NO_WINDOW = 0x08000000
+    if getattr(sys, "frozen", False):
+        cmd = [sys.executable, "--about"]
+    else:
+        cmd = [sys.executable, str(Path(sys.argv[0]).resolve()), "--about"]
     subprocess.Popen(cmd, creationflags=CREATE_NO_WINDOW)
 
 
@@ -638,6 +693,9 @@ def run_tray() -> None:
     def do_settings(icon, item=None) -> None:
         _spawn_settings()
 
+    def do_about(icon, item=None) -> None:
+        _spawn_about()
+
     def do_exit(icon, item=None) -> None:
         icon.stop()
 
@@ -651,6 +709,7 @@ def run_tray() -> None:
         pystray.MenuItem("Kill by Group…", pystray.Menu(*group_items)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Settings…",   do_settings),
+        pystray.MenuItem("About…",      do_about),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",        do_exit),
     )
@@ -674,5 +733,7 @@ def run_tray() -> None:
 if __name__ == "__main__":
     if "--settings" in sys.argv:
         run_settings()
+    elif "--about" in sys.argv:
+        show_about()
     else:
         run_tray()
